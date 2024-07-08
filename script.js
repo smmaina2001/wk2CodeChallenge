@@ -1,26 +1,26 @@
-document.addEventListener('DOMcontentLoaded'),() => (
-    let SHOPPING LIST = JSON.parse (localstorage.getItem('SHOPPING LIST')) [];
 
-const iteminput = document.getElementById ('item-input');
-const add Button = document.getElementById ('add-button');
-const SHOPPING LISTcontainer = document.getElementById('SHOPPING LIST');
-const clear Button = document.getElementById('clear button');
+document.addEventListener('DOMcontentLoaded'),() => 
+     shoppingList = JSON.parse (localstorage.getItem('SHOPPING LIST')) ;
+
+const itemInput = document.getElementById ('item-input');
+const addButton = document.getElementById ('add-button');
+const shoppingListContainer = document.getElementById('SHOPPING LIST');
+const clearButton = document.getElementById('clear button');
 function renderlist() {
-    SHOPPINGLISTcontainer.innerHTML = '';
-    SHOPPINGLIST.forEach(item,index) => {
+    shoppingListContainer  => {
         const li = document.createElement(li);
-        li.content = item,text;.classList.toggle('purchase',item-purchased);
+        li.content = item,text;classList.toggle('purchase',item-purchased);
       
         const ActionsDiv = document.createElement('div');
         ActionsDiv.classList.add('item-actions');
 
-        const toggle button = document.createElement('button');
-        toggleButton.textcontent = itempurchased 'unmark' : 'mark';
-        toggleButton.addEventListener 'click',() => togglepurchased (index);
+        const toggleButton = document.createElement('button');
+        toggleButton.textcontent = itempurchased ('unmark' , 'mark');
+        toggleButton.addEventListener ('click'),() => togglepurchased (index);
         ActionsDiv.appendChild(toggleButton );
         
 
-        const edit button = document.createElement ('button');
+        const editButton = document.createElement ('button');
         edit.Buttontextcontent = 'edit';
         edit.Button.addEventListener('click',() => edititem(index) );
         ActionsDiv.appendChild(editButton)
@@ -37,4 +37,4 @@ function renderlist() {
          }
 
 
-     });
+     };
