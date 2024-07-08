@@ -1,40 +1,66 @@
-
-document.addEventListener('DOMcontentLoaded'),() => 
-     shoppingList = JSON.parse (localstorage.getItem('SHOPPING LIST')) ;
-
-const itemInput = document.getElementById ('item-input');
-const addButton = document.getElementById ('add-button');
-const shoppingListContainer = document.getElementById('SHOPPING LIST');
-const clearButton = document.getElementById('clear button');
-function renderlist() {
-    shoppingListContainer  => {
-        const li = document.createElement(li);
-        li.content = item,text;classList.toggle('purchase',item-purchased);
-      
-        const ActionsDiv = document.createElement('div');
-        ActionsDiv.classList.add('item-actions');
-
-        const toggleButton = document.createElement('button');
-        toggleButton.textcontent = itempurchased ('unmark' , 'mark');
-        toggleButton.addEventListener ('click'),() => togglepurchased (index);
-        ActionsDiv.appendChild(toggleButton );
-        
-
-        const editButton = document.createElement ('button');
-        edit.Buttontextcontent = 'edit';
-        edit.Button.addEventListener('click',() => edititem(index) );
-        ActionsDiv.appendChild(editButton)
-
-        
-       const deleteButton = document.createElement('button');
-       deleteButton.text = 'delete';
-       deleteButton.addEventListener('click', ()=>deleteItem(index));
-       ActionsDiv.appendChild(deleteButton);
-
-    
-        li.appendChild(ActionsDiv);
-        SHOPPINGLISTcontainer.appendChild(li);
-         }
-
-
-     };
+document.addEventListener("DOMContentLoaded", function () {
+    const itemInput = document.getElementById("itemInput");
+    const addButton = document.getElementById("addButton");
+    const clearButton = document.getElementById("clearButton");
+    const itemList = document.getElementById("itemList");
+  
+    let items = JSON.parse(localStorage.getItem("shoppingList")) || [];
+  
+    function renderList() {
+      itemList.innerHTML = ""; // Clear the list
+      for (let i = 0; i < items.length; i++) {
+        const li = document.createElement("li"); // create list
+        if (items[i].purchased) {
+          li.textContent = items[i].text;
+          li.style.textDecoration = "line-through";
+        }
+  
+        li.addEventListener(
+          "click",
+          (function (index) {
+            return function () {
+              items[index].purchased = !items[index].purchased;
+              saveList();
+              renderList();
+            };
+          })(i)
+        );
+  
+        li.addEventListener(
+          "dblclick",
+          (function (index) {
+            return function () {
+              const newItem = prompt("Edit item:", items[index].text);
+              if (newItem) {
+                items[index].text = newItem;
+                saveList();
+                renderList();
+              }
+            };
+          })(i)
+        );
+        itemList.appendChild(li);
+      }
+    }
+  
+    function saveList() {
+      localStorage.setItem("shoppingList", JSON.stringify(items));
+    }
+    addButton.addEventListener("click", function () {
+      const itemText = itemInput.value.trim();
+      if (itemText) {
+        items.push({ text: itemText, purchased: false });
+        itemInput.value = "";
+        saveList();
+        renderList();
+      }
+    });
+  
+    clearButton.addEventListener("click", function () {
+      items = [];
+      saveList();
+      renderList();
+    });
+  
+    renderList();
+  });
