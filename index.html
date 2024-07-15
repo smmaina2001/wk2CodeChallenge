@@ -4,15 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping List</title>
-    <link rel="stylesheet" href="/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #shopping-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .purchased {
+            text-decoration: line-through;
+            background-color: #f0f0f0;
+        }
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+        }
+        .edit-input {
+            flex-grow: 1;
+            margin-right: 5px;
+        }
+    </style>
 </head>
 <body>
     <h1>Shopping List</h1>
-    <input type="text" id="itemInput" placeholder="Enter item">
-    <button id="addButton">Add</button>
-    <button id="clearButton">Clear List</button>
-    <button id="markAsPurchased">Purchased</button>
-    <ul id="itemList"></ul>
-    <script src="/index.js"></script>
+    <input type="text" id="item-input" placeholder="Enter item">
+    <button id="add-btn">Add</button>
+    <button id="clear-btn">Clear List</button>
+    <ul id="shopping-list"></ul>
+
+    <script src="script.js"></script>
 </body>
 </html>

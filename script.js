@@ -1,66 +1,87 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const itemInput = document.getElementById("itemInput");
-    const addButton = document.getElementById("addButton");
-    const clearButton = document.getElementById("clearButton");
-    const itemList = document.getElementById("itemList");
-  
-    let items = JSON.parse(localStorage.getItem("shoppingList")) || [];
-  
-    function renderList() {
-      itemList.innerHTML = ""; // Clear the list
-      for (let i = 0; i < items.length; i++) {
-        const li = document.createElement("li"); // create list
-        if (items[i].purchased) {
-          li.textContent = items[i].text;
-          li.style.textDecoration = "line-through";
+ const itemInput = document.getElementById('item-input');
+ const addBtn = document.getElementById('add-btn');
+  const clearBtn = document.getElementById('clear-btn');
+  const shoppingList = document.getElementById('shopping-list');
+  let items = JSON.parse(localStorage.getItem('shoppingList')) || [];
+
+        function renderList() {
+            shoppingList.innerHTML = '';
+            items.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = 'list-item';
+                if (item.purchased) li.classList.add('purchased');
+                li.innerHTML = `
+                    <span>${item.name}</span>
+                    <div>
+                        <button class="edit-btn">Edit</button>
+                        <button class="purchase-btn">${item.purchased ? 'Unpurchase' : 'Purchase'}</button>
+                        <button class="delete-btn">Delete</button>
+                    </div>
+                `;
+                shoppingList.appendChild(li);
+
+                li.querySelector('.edit-btn').addEventListener('click', () => editItem(index));
+                li.querySelector('.purchase-btn').addEventListener('click', () => togglePurchase(index));
+                li.querySelector('.delete-btn').addEventListener('click', () => deleteItem(index));
+            });
+            saveToLocalStorage();
         }
-  
-        li.addEventListener(
-          "click",
-          (function (index) {
-            return function () {
-              items[index].purchased = !items[index].purchased;
-              saveList();
-              renderList();
-            };
-          })(i)
-        );
-  
-        li.addEventListener(
-          "dblclick",
-          (function (index) {
-            return function () {
-              const newItem = prompt("Edit item:", items[index].text);
-              if (newItem) {
-                items[index].text = newItem;
-                saveList();
+
+        function addItem() {
+            const itemName = itemInput.value.trim();
+            if (itemName) {
+                items.push({ name: itemName, purchased: false });
+                itemInput.value = '';
                 renderList();
-              }
-            };
-          })(i)
-        );
-        itemList.appendChild(li);
-      }
-    }
-  
-    function saveList() {
-      localStorage.setItem("shoppingList", JSON.stringify(items));
-    }
-    addButton.addEventListener("click", function () {
-      const itemText = itemInput.value.trim();
-      if (itemText) {
-        items.push({ text: itemText, purchased: false });
-        itemInput.value = "";
-        saveList();
+            }
+        }
+
+        function editItem(index) {
+            const li = shoppingList.children[index];
+            const span = li.querySelector('span');
+            const editInput = document.createElement('input');
+            editInput.type = 'text';
+            editInput.className = 'edit-input';
+            editInput.value = items[index].name;
+            li.insertBefore(editInput, span);
+            li.removeChild(span);
+
+            function saveEdit() {
+                items[index].name = editInput.value;
+                renderList();
+            }
+
+            editInput.addEventListener('blur', saveEdit);
+            editInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') saveEdit();
+            });
+            editInput.focus();
+        }
+
+        function togglePurchase(index) {
+            items[index].purchased = !items[index].purchased;
+            renderList();
+        }
+
+        function deleteItem(index) {
+            items.splice(index, 1);
+            renderList();
+        }
+
+        function clearList() {
+            items = [];
+            renderList();
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('shoppingList', JSON.stringify(items));
+        }
+
+        addBtn.addEventListener('click', addItem);
+        clearBtn.addEventListener('click', clearList);
+        itemInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') addItem();
+        });
+
         renderList();
-      }
-    });
-  
-    clearButton.addEventListener("click", function () {
-      items = [];
-      saveList();
-      renderList();
-    });
-  
-    renderList();
-  });
+    
